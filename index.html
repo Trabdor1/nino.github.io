@@ -6,57 +6,155 @@
   <title>Portfolio - Nino HUE</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
+
   <header>
     <h1>Nino HUE</h1>
-    <p>Étudiant en BTS SIO option SISR</p>
+
     <nav>
-      <a href="#apropos">À propos</a>
-      <a href="pages\tableaudecompetences.html">Compétences</a>
-      <a href="pages\projets.html">Projets</a>
-      <a href="https://www.linkedin.com/feed/">CV Linkedin</a>
+      <a href="index.html">Accueil</a>
+      <a href="#formation">Ma formation</a>
+      <a href="pages/EpreuveE5.html">Épreuve E5</a>
+      <a href="pages/EpreuveE6.html">Épreuve E6</a>
+      <a href="#veille">Veille technologique</a>
+      <a href="#contact">Contact</a>
     </nav>
   </header>
 
   <main>
-    <section id="apropos">
-      <h2>À propos</h2>
-      <p>Je suis étudiant en BTS SIO option SISR. Ce portfolio présente mes réalisations professionnelles, mes compétences et mes projets réalisés en formation et en entreprise.</p>
+
+    <section class="hero" id="accueil">
+      <div class="hero-left">
+        <span class="name">Nino HUE</span>
+
+        <div class="buttons">
+          <a href="https://www.linkedin.com/feed/" class="btn">CV</a>
+          <a href="https://www.linkedin.com/feed/" class="btn btn-outline">LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <h2>Présentation</h2>
+
+        <p>
+          Passionné par l'informatique et les nouvelles technologies, j'ai naturellement choisi de m'orienter vers un BTS Services Informatiques aux Organisations (SIO), option Solutions d'Infrastructure, Systèmes et Réseaux (SISR), que j'effectue en alternance au sein du support informatique de l'URSSAF depuis septembre 2024.
+        </p>
+
+        <p>
+          L'alternance s'est imposée comme une évidence, car elle me permet de combiner enseignements théoriques et mise en pratique, dans la continuité de mon baccalauréat professionnel Systèmes Numériques.
+        </p>
+
+        <p>
+          Mon expérience au sein du support informatique me donne l'opportunité d'appliquer les compétences acquises à l'Efrei. J'y développe notamment des compétences techniques telles que la gestion de parc informatique, le traitement des incidents et des demandes, ainsi que des compétences relationnelles grâce au contact direct avec les collaborateurs.
+        </p>
+      </div>
     </section>
 
-    <section id="competences">
-      <h2>Compétences</h2>
-      <ul>
-        <li>Administration systèmes Windows / Linux</li>
-        <li>Réseaux, VLAN, routage inter-VLAN</li>
-        <li>Cybersécurité, VPN WireGuard</li>
-        <li>GLPI, Active Directory, support utilisateur</li>
-      </ul>
+    <section class="section" id="experiences">
+      <h2>Expériences</h2>
+
+      <div class="experience-card">
+        <div class="icon">💻</div>
+
+        <div class="experience-content">
+          <div class="experience-header">
+            <h3>Technicien Support Informatique <span>- Alternance URSSAF</span></h3>
+            <p>Septembre 2024 - Juin 2026</p>
+          </div>
+
+          <ul>
+            <li>Support N1/N2 : gestion et résolution d'incidents</li>
+            <li>Gestion de parc informatique : postes, équipements, maintien de parc à jour</li>
+            <li>Déploiement / masterisation de postes avec Ivanti</li>
+            <li>Utilisation de console de déploiement Ivanti</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="experience-card reverse">
+        <div class="icon blue">🛠️</div>
+
+        <div class="experience-content">
+          <div class="experience-header">
+            <h3>Support Informatique <span>- Stage URSSAF</span></h3>
+            <p>Décembre 2023 - Janvier 2024</p>
+          </div>
+
+          <p>Support utilisateurs / préparation de postes / brassages réseaux</p>
+        </div>
+      </div>
+
+      <div class="experience-card">
+        <div class="icon">🎬</div>
+
+        <div class="experience-content">
+          <div class="experience-header">
+            <h3>Support Informatique <span>- Stage Warner Bros</span></h3>
+            <p>Juin 2022 - Juillet 2022</p>
+          </div>
+
+          <p>Préparation de postes / brassages réseaux</p>
+        </div>
+      </div>
+
+      <div class="experience-card reverse">
+        <div class="icon blue">🏢</div>
+
+        <div class="experience-content">
+          <div class="experience-header">
+            <h3>Support Informatique <span>- Stage Mairie de Dammarie-les-Lys</span></h3>
+            <p>Décembre 2021</p>
+          </div>
+
+          <p>Réparation de postes / dépannage dans la ville</p>
+        </div>
+      </div>
     </section>
 
-    <section id="projets">
-      <h2>Projets</h2>
+    <section class="section formation" id="formation">
+      <h2>Parcours scolaire</h2>
 
-      <article>
-        <h3>Segmentation réseau par VLAN et routage inter-VLAN</h3>
-        <p>Mise en place d'une segmentation du réseau afin d'améliorer la sécurité, l'organisation et la circulation du trafic entre plusieurs services.</p>
-      </article>
+      <div class="timeline">
+        <div class="timeline-card">
+          <h3>2026</h3>
+          <p>BTS SIO en alternance à EFREI Paris</p>
+        </div>
 
-      <article>
-        <h3>Mise en place d'un VPN WireGuard</h3>
-        <p>Déploiement d'un accès VPN sécurisé pour permettre une connexion distante à l'infrastructure hors établissement.</p>
-      </article>
+        <div class="timeline-card">
+          <h3>2024</h3>
+          <p>Bac Pro Systèmes Numériques option RISC</p>
+        </div>
+      </div>
     </section>
 
-    <section id="contact">
+    <section class="section schools">
+      <h2>Formation</h2>
+
+      <div class="school-grid">
+        <div class="school-card">
+          <img src="assets/images/Logo_Efrei_2022.svg.png" alt="Logo EFREI Paris">
+          <p><strong>Efrei Paris</strong> - BTS SIO option SISR 2024 - 2026</p>
+        </div>
+
+        <div class="school-card">
+          <img src="assets/images/institution-st-Aspais-fond-logo-blanc-et-bleu.png" alt="Logo Lycée Saint Aspais">
+          <p><strong>Lycée Saint Aspais</strong> - Bac Professionnel Systèmes Numériques option RISC 2021 - 2024</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section empty-section" id="veille">
+      <h2>Veille technologique</h2>
+      <p>Cette section pourra être complétée avec mes recherches et ma veille informatique.</p>
+    </section>
+
+    <section class="section empty-section" id="contact">
       <h2>Contact</h2>
-      <p>Email : tonadresse@mail.com</p>
-      <p><a href="cv.pdf" target="_blank">Télécharger mon CV</a></p>
+      <p>Vous pouvez me contacter via mon CV ou mon profil LinkedIn.</p>
     </section>
+
   </main>
 
-  <footer>
-    <p>© 2026 - Nino HUE</p>
-  </footer>
 </body>
 </html>
