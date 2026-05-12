@@ -525,3 +525,89 @@ main {
     padding: 25px;
   }
 }
+/* =========================
+   OPTIONS BTS SIO
+========================= */
+
+.options-section {
+  margin-top: 50px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.option-card {
+  background: linear-gradient(180deg, rgba(18, 14, 38, 0.96), rgba(10, 10, 24, 0.98));
+  border: 1px solid rgba(143, 91, 255, 0.22);
+  border-radius: 18px;
+  padding: 32px 28px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+}
+
+.option-icon {
+  font-size: 3rem;
+  margin-bottom: 18px;
+}
+
+.option-card h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+  color: #f2ecff;
+}
+
+.option-card p {
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: #ddd6ee;
+  margin-bottom: 18px;
+}
+
+.option-subtitle {
+  font-weight: 700;
+  color: #b388ff;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.option-card ul {
+  padding-left: 24px;
+  margin-top: 8px;
+}
+
+.option-card li {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: #ece8f7;
+  margin-bottom: 6px;
+}
+
+@media screen and (max-width: 1000px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .option-card {
+    padding: 24px 20px;
+  }
+
+  .option-card h3 {
+    font-size: 1.6rem;
+  }
+
+  .option-card p,
+  .option-card li {
+    font-size: 0.98rem;
+  }
+
+  .option-icon {
+    font-size: 2.4rem;
+  }
+}

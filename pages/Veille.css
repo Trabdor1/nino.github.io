@@ -1,0 +1,159 @@
+nav {
+  width: 100%;
+  padding: 30px 8%;
+  background: linear-gradient(90deg, #090912, #0f1030);
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1000;
+}
+
+nav a {
+  color: #e8e8f5;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: #b388ff;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: linear-gradient(180deg, #090912 0%, #0d0b1d 100%);
+  color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.veille-page {
+  width: 90%;
+  max-width: 1350px;
+  margin: 0 auto;
+  padding: 60px 0 100px 0;
+}
+
+.hero-veille {
+  margin-bottom: 50px;
+}
+
+.subtitle {
+  color: #b388ff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.hero-veille h1 {
+  font-size: 3.4rem;
+  font-weight: 300;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.hero-veille h2 {
+  font-size: 1.9rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #e7d9ff;
+  margin-bottom: 22px;
+  max-width: 1100px;
+}
+
+.intro {
+  max-width: 1000px;
+  font-size: 1.08rem;
+  line-height: 1.9;
+  color: #d9d2ea;
+}
+
+.content-section {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.veille-card {
+  background: linear-gradient(180deg, rgba(18, 14, 38, 0.96), rgba(10, 10, 24, 0.98));
+  border: 1px solid rgba(143, 91, 255, 0.22);
+  border-left: 4px solid #8f5bff;
+  border-radius: 18px;
+  padding: 28px 30px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+}
+
+.veille-card h3 {
+  font-size: 1.7rem;
+  margin-bottom: 18px;
+  color: #f3ecff;
+}
+
+.veille-card p {
+  font-size: 1.03rem;
+  line-height: 1.9;
+  color: #e5def3;
+  margin-bottom: 14px;
+}
+
+.veille-card p:last-child {
+  margin-bottom: 0;
+}
+
+.sources-list {
+  padding-left: 22px;
+}
+
+.sources-list li {
+  font-size: 1.02rem;
+  line-height: 1.9;
+  color: #ddd6ee;
+  margin-bottom: 8px;
+}
+
+@media screen and (max-width: 900px) {
+  .hero-veille h1 {
+    font-size: 2.7rem;
+  }
+
+  .hero-veille h2 {
+    font-size: 1.5rem;
+  }
+
+  .veille-card h3 {
+    font-size: 1.45rem;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .veille-page {
+    width: 92%;
+    padding: 40px 0 70px 0;
+  }
+
+  .hero-veille h1 {
+    font-size: 2.2rem;
+  }
+
+  .hero-veille h2 {
+    font-size: 1.25rem;
+  }
+
+  .intro,
+  .veille-card p,
+  .sources-list li {
+    font-size: 0.98rem;
+  }
+
+  .veille-card {
+    padding: 22px 20px;
+  }
+}

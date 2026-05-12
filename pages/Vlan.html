@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procédure VLAN - M2L</title>
+  <link rel="stylesheet" href="../pages/Vlan.css">
+</head>
+<body>
+
+  <header class="hero">
+    <div class="hero-overlay">
+      <p class="subtitle">BTS Services Informatiques aux Organisations</p>
+      <h1>Procédure technique</h1>
+      <h2>Mise en place des VLAN et du routage inter-VLAN dans le contexte M2L</h2>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="intro-card">
+      <h3>Option SISR – Solutions d’Infrastructure, Systèmes et Réseaux</h3>
+      <p>
+        Cette procédure présente la mise en place des VLAN et du routage inter-VLAN dans le contexte
+        de la Maison des Ligues de Lorraine (M2L). L’objectif est de segmenter logiquement le réseau,
+        d’isoler les flux selon leur usage et de permettre la communication entre les sous-réseaux
+        lorsque cela est nécessaire.
+      </p>
+    </section>
+
+    <section class="section-block">
+      <h2>1. Présentation du projet</h2>
+
+      <article class="subsection">
+        <h3>1.1 Contexte</h3>
+        <p>
+          Dans le cadre du contexte réseau de la Maison des Ligues de Lorraine (M2L), l’infrastructure
+          doit être segmentée en plusieurs réseaux logiques afin de séparer les ligues, les services
+          internes et les équipements spécifiques comme la téléphonie IP. Cette séparation permet
+          d’améliorer la sécurité, la gestion du trafic et l’administration de l’ensemble du réseau.
+        </p>
+        <p>
+          Dans ma maquette Packet Tracer, les postes utilisateurs des ligues Karaté, Athlé et Yoga
+          sont répartis dans des VLAN différents. Les téléphones IP sont isolés dans un VLAN spécifique
+          dédié à la voix. Le trafic des ligues est routé par deux routeurs Cisco puis transite par un
+          switch central nommé <strong>SWDMZ</strong>, qui sert de point de passage vers le reste de l’infrastructure.
+        </p>
+      </article>
+
+      <article class="subsection">
+        <h3>1.2 Objectifs</h3>
+        <ul>
+          <li>Segmenter le réseau des ligues en plusieurs VLAN.</li>
+          <li>Isoler les téléphones IP dans un VLAN VOIP.</li>
+          <li>Attribuer une passerelle à chaque réseau logique.</li>
+          <li>Mettre en place le routage inter-VLAN grâce aux routeurs Cisco.</li>
+          <li>Faire transiter les communications via le switch central SWDMZ.</li>
+          <li>Vérifier le bon fonctionnement par des tests de connectivité.</li>
+        </ul>
+      </article>
+
+      <article class="subsection">
+        <h3>1.3 Prérequis techniques</h3>
+        <ul>
+          <li>Une maquette Packet Tracer déjà câblée</li>
+          <li>Deux routeurs Cisco pour les ligues</li>
+          <li>Un switch central SWDMZ</li>
+          <li>Des switchs d’accès pour les ligues</li>
+          <li>Des postes clients et téléphones IP</li>
+          <li>Le plan d’adressage IP défini dans le cahier des charges M2L</li>
+        </ul>
+      </article>
+
+      <article class="subsection">
+        <h3>1.4 Architecture retenue</h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>VLAN</th>
+                <th>Nom</th>
+                <th>Réseau</th>
+                <th>Passerelle</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10</td>
+                <td>KARATE</td>
+                <td>172.16.10.0/24</td>
+                <td>172.16.10.254</td>
+              </tr>
+              <tr>
+                <td>11</td>
+                <td>ATHLE</td>
+                <td>172.16.11.0/24</td>
+                <td>172.16.11.254</td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>YOGA</td>
+                <td>172.16.12.0/24</td>
+                <td>172.16.12.254</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>VOIP</td>
+                <td>172.16.5.0/24</td>
+                <td>172.16.5.254</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>INFORMATIQUE M2L</td>
+                <td>172.16.2.224/27</td>
+                <td>172.16.2.254</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p><strong>Réseaux de transit retenus :</strong></p>
+        <ul>
+          <li>10.10.10.0/30 pour RTLIGUES1</li>
+          <li>10.10.10.4/30 pour RTLIGUES2</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>2. Préparation des équipements</h2>
+
+      <article class="subsection">
+        <h3>2.1 Configuration de base des routeurs</h3>
+        <div class="code-block">
+<pre><code>enable
+configure terminal
+hostname RTLIGUES1
+no ip domain-lookup</code></pre>
+        </div>
+
+        <div class="code-block">
+<pre><code>enable
+configure terminal
+hostname RTLIGUES2
+no ip domain-lookup</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>2.2 Configuration de base du switch central</h3>
+        <div class="code-block">
+<pre><code>enable
+configure terminal
+hostname SWDMZ
+no ip domain-lookup</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>2.3 Explication</h3>
+        <p>
+          La commande <code>enable</code> permet d’accéder au mode privilégié. La commande
+          <code>configure terminal</code> permet d’entrer dans le mode de configuration globale.
+          La commande <code>hostname</code> permet d’identifier clairement l’équipement dans la maquette.
+          Enfin, <code>no ip domain-lookup</code> désactive la résolution DNS automatique et évite les temps
+          d’attente lorsqu’une commande est mal saisie.
+        </p>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>3. Mise en place de la segmentation réseau</h2>
+
+      <article class="subsection">
+        <h3>3.1 Répartition des équipements dans les VLAN</h3>
+        <ul>
+          <li><strong>VLAN 10 – Karaté</strong> : PC0 et PC1</li>
+          <li><strong>VLAN 11 – Athlé</strong> : PC2 et PC3</li>
+          <li><strong>VLAN 12 – Yoga</strong> : PC4 et PC5</li>
+          <li><strong>VLAN 5 – VOIP</strong> : IP Phone0 et IP Phone1</li>
+        </ul>
+      </article>
+
+      <article class="subsection">
+        <h3>3.2 Création des VLAN sur les switchs des ligues</h3>
+        <div class="code-block">
+<pre><code>enable
+configure terminal
+
+vlan 10
+name KARATE
+
+vlan 11
+name ATHLE
+
+vlan 12
+name YOGA
+
+vlan 5
+name VOIP
+
+end
+write memory</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>3.3 Explication</h3>
+        <p>
+          Chaque VLAN correspond à un domaine de broadcast distinct. Cette étape permet donc de
+          séparer logiquement les machines sans multiplier les équipements physiques. La commande
+          <code>write memory</code> permet d’enregistrer la configuration.
+        </p>
+      </article>
+
+      <article class="subsection">
+        <h3>3.4 Affectation des ports d’accès</h3>
+        <div class="code-block">
+<pre><code>interface fastEthernet0/5
+switchport mode access
+switchport access vlan 10
+spanning-tree portfast</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>3.5 Explication</h3>
+        <p>
+          La commande <code>switchport mode access</code> définit un port destiné à un seul VLAN.
+          La commande <code>switchport access vlan 10</code> associe ce port au VLAN 10.
+          Enfin, <code>spanning-tree portfast</code> accélère la mise en service du port pour un équipement terminal.
+        </p>
+      </article>
+
+      <article class="subsection">
+        <h3>3.6 Mise en place des trunks</h3>
+        <div class="code-block">
+<pre><code>interface gigabitEthernet0/1
+switchport mode trunk
+switchport trunk allowed vlan 5,10,11,12</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>3.7 Explication</h3>
+        <p>
+          Le trunk permet de faire circuler plusieurs VLAN sur une seule interface physique grâce à
+          l’encapsulation 802.1Q. Cette configuration est nécessaire pour le transport des VLAN entre
+          les switchs et les routeurs.
+        </p>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>4. Configuration du routage inter-VLAN</h2>
+
+      <article class="subsection">
+        <h3>4.1 Principe retenu</h3>
+        <p>
+          Le routage inter-VLAN est assuré par deux routeurs Cisco à l’aide du principe de
+          <em>router-on-a-stick</em>. Chaque routeur utilise une interface physique reliée au switch des ligues,
+          puis des sous-interfaces correspondant aux différents VLAN.
+        </p>
+      </article>
+
+      <article class="subsection">
+        <h3>4.2 Configuration du routeur RTLIGUES1</h3>
+        <div class="code-block">
+<pre><code>enable
+configure terminal
+hostname RTLIGUES1
+no ip domain-lookup
+
+interface gigabitEthernet0/1
+no shutdown
+
+interface gigabitEthernet0/1.10
+encapsulation dot1Q 10
+ip address 172.16.10.254 255.255.255.0
+
+interface gigabitEthernet0/1.11
+encapsulation dot1Q 11
+ip address 172.16.11.254 255.255.255.0
+
+interface gigabitEthernet0/0
+ip address 10.10.10.1 255.255.255.252
+no shutdown
+
+ip route 172.16.12.0 255.255.255.0 10.10.10.2
+ip route 172.16.5.0 255.255.255.0 10.10.10.2
+ip route 172.16.2.224 255.255.255.224 10.10.10.2
+ip route 192.168.0.0 255.255.255.248 10.10.10.2
+ip route 192.168.1.0 255.255.255.248 10.10.10.2
+ip route 0.0.0.0 0.0.0.0 10.10.10.2
+
+end
+write memory</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>4.3 Explication</h3>
+        <p>
+          Les sous-interfaces permettent de traiter plusieurs VLAN sur une seule interface physique.
+          La commande <code>encapsulation dot1Q</code> associe chaque sous-interface à son VLAN.
+          Les adresses IP configurées représentent les passerelles par défaut des réseaux correspondants.
+          Les routes statiques permettent d’atteindre les réseaux non directement connectés.
+        </p>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>5. Configuration du second routeur des ligues</h2>
+
+      <article class="subsection">
+        <h3>5.1 Configuration du routeur RTLIGUES2</h3>
+        <div class="code-block">
+<pre><code>enable
+configure terminal
+hostname RTLIGUES2
+no ip domain-lookup
+
+interface gigabitEthernet0/1
+no shutdown
+
+interface gigabitEthernet0/1.12
+encapsulation dot1Q 12
+ip address 172.16.12.254 255.255.255.0
+
+interface gigabitEthernet0/1.5
+encapsulation dot1Q 5
+ip address 172.16.5.254 255.255.255.0
+
+interface gigabitEthernet0/0
+ip address 10.10.10.5 255.255.255.252
+no shutdown
+
+ip route 172.16.10.0 255.255.255.0 10.10.10.6
+ip route 172.16.11.0 255.255.255.0 10.10.10.6
+ip route 172.16.2.224 255.255.255.224 10.10.10.6
+ip route 192.168.0.0 255.255.255.248 10.10.10.6
+ip route 192.168.1.0 255.255.255.248 10.10.10.6
+ip route 0.0.0.0 0.0.0.0 10.10.10.6
+
+end
+write memory</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>5.2 Explication</h3>
+        <p>
+          Le principe est identique à celui de RTLIGUES1. Chaque sous-interface représente un VLAN
+          et chaque adresse IP configurée devient la passerelle des équipements du réseau correspondant.
+        </p>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>6. Configuration du switch central SWDMZ</h2>
+
+      <article class="subsection">
+        <h3>6.1 Rôle du switch central</h3>
+        <p>
+          Le switch SWDMZ sert de point de transit entre les routeurs des ligues, le réseau M2L
+          et les équipements de sécurité. Il ne réalise pas de routage IP mais assure le transport
+          des VLAN nécessaires.
+        </p>
+      </article>
+
+      <article class="subsection">
+        <h3>6.2 Création des VLAN de transit</h3>
+        <div class="code-block">
+<pre><code>enable
+configure terminal
+hostname SWDMZ
+no ip domain-lookup
+
+vlan 2
+name INFORMATIQUE_M2L
+
+vlan 100
+name TRANSIT_RTL1
+
+vlan 101
+name TRANSIT_RTL2</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>6.3 Configuration des ports</h3>
+        <div class="code-block">
+<pre><code>interface fastEthernet0/24
+switchport mode access
+switchport access vlan 100
+
+interface fastEthernet0/1
+switchport mode access
+switchport access vlan 101
+
+interface fastEthernet0/2
+switchport mode trunk
+switchport trunk allowed vlan 2
+
+interface gigabitEthernet0/1
+switchport mode trunk
+switchport trunk allowed vlan 2,100,101
+
+interface gigabitEthernet1/1
+switchport mode access
+switchport access vlan 2</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>6.4 Configuration de l’adresse de gestion</h3>
+        <div class="code-block">
+<pre><code>interface vlan 2
+ip address 172.16.2.253 255.255.255.224
+no shutdown
+
+ip default-gateway 172.16.2.254
+
+end
+write memory</code></pre>
+        </div>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>7. Configuration des postes de test</h2>
+
+      <article class="subsection">
+        <h3>7.1 Adressage manuel des postes</h3>
+        <ul>
+          <li><strong>PC0</strong> : 172.16.10.10 / 255.255.255.0 / Passerelle 172.16.10.254</li>
+          <li><strong>PC1</strong> : 172.16.10.11 / 255.255.255.0 / Passerelle 172.16.10.254</li>
+          <li><strong>PC2</strong> : 172.16.11.10 / 255.255.255.0 / Passerelle 172.16.11.254</li>
+          <li><strong>PC3</strong> : 172.16.11.11 / 255.255.255.0 / Passerelle 172.16.11.254</li>
+          <li><strong>PC4</strong> : 172.16.12.10 / 255.255.255.0 / Passerelle 172.16.12.254</li>
+          <li><strong>PC5</strong> : 172.16.12.11 / 255.255.255.0 / Passerelle 172.16.12.254</li>
+          <li><strong>IP Phone0</strong> : 172.16.5.10 / 255.255.255.0 / Passerelle 172.16.5.254</li>
+          <li><strong>IP Phone1</strong> : 172.16.5.11 / 255.255.255.0 / Passerelle 172.16.5.254</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>8. Vérification de la configuration</h2>
+
+      <article class="subsection">
+        <h3>8.1 Vérifications sur les switchs</h3>
+        <div class="code-block">
+<pre><code>show vlan brief
+show interfaces trunk
+show running-config</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>8.2 Vérifications sur les routeurs</h3>
+        <div class="code-block">
+<pre><code>show ip interface brief
+show ip route
+show running-config</code></pre>
+        </div>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>9. Tests de connectivité</h2>
+
+      <article class="subsection">
+        <h3>9.1 Tests à effectuer</h3>
+        <div class="code-block">
+<pre><code>ping 172.16.10.254
+ping 172.16.11.10
+ping 172.16.12.10</code></pre>
+        </div>
+
+        <div class="code-block">
+<pre><code>ping 172.16.12.254
+ping 172.16.2.242</code></pre>
+        </div>
+      </article>
+
+      <article class="subsection">
+        <h3>9.2 Explication</h3>
+        <p>
+          Ces tests permettent de vérifier que la passerelle de chaque VLAN est joignable,
+          que le routage inter-VLAN fonctionne correctement et que les équipements peuvent
+          communiquer avec le réseau M2L.
+        </p>
+      </article>
+    </section>
+
+    <section class="section-block">
+      <h2>10. Résultat obtenu</h2>
+      <p>
+        À l’issue de cette mise en œuvre, les réseaux des ligues ont été correctement segmentés
+        dans des VLAN distincts. Les téléphones IP ont été isolés dans un VLAN spécifique dédié
+        à la téléphonie. Les deux routeurs ont été configurés avec des sous-interfaces 802.1Q afin
+        d’assurer le routage inter-VLAN, tandis que le switch central SWDMZ a servi de point de
+        transit vers le reste de l’infrastructure.
+      </p>
+      <p>
+        Cette réalisation m’a permis de reproduire une architecture réseau structurée, cohérente
+        avec le contexte M2L, et de mettre en pratique la segmentation logique, le routage inter-VLAN
+        et la configuration d’équipements Cisco dans un environnement simulé.
+      </p>
+    </section>
+
+    <section class="section-block">
+      <h2>11. Bilan et conclusion</h2>
+
+      <article class="subsection">
+        <h3>11.1 Résumé des actions réalisées</h3>
+        <ul>
+          <li>Préparation des routeurs et du switch central</li>
+          <li>Création des VLAN pour les ligues et la VOIP</li>
+          <li>Affectation des ports d’accès</li>
+          <li>Mise en place des trunks</li>
+          <li>Configuration des sous-interfaces sur les routeurs</li>
+          <li>Mise en place des routes statiques</li>
+          <li>Configuration du switch central SWDMZ</li>
+          <li>Attribution des adresses IP aux postes de test</li>
+          <li>Vérification et tests de connectivité</li>
+        </ul>
+      </article>
+
+      <article class="subsection">
+        <h3>11.2 Compétences mobilisées</h3>
+        <ul>
+          <li>Concevoir une solution d’infrastructure réseau</li>
+          <li>Configurer des équipements Cisco</li>
+          <li>Mettre en place une segmentation réseau par VLAN</li>
+          <li>Réaliser un routage inter-VLAN à l’aide de sous-interfaces</li>
+          <li>Vérifier le fonctionnement d’une infrastructure par des tests réseau</li>
+          <li>Rédiger une procédure technique structurée et professionnelle</li>
+        </ul>
+      </article>
+    </section>
+
+  </main>
+
+</body>
+</html>
